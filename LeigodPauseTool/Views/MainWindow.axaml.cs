@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using CommunityToolkit.Mvvm.Messaging;
 using CommunityToolkit.Mvvm.Messaging.Messages;
 using Avalonia.Controls.Notifications;
+using Avalonia.Threading;
 
 namespace LeigodPauseTool.Views;
 
@@ -23,8 +24,11 @@ public partial class MainWindow : Window
         WeakReferenceMessenger.Default.Register<Notification>(this, (r, m) =>
         {
             Console.WriteLine($"收到消息: {m.Title}");
-            // 这里可以调用 ShowDialog 或更新 UI
-            _notificationManager.Show(m);
+            Dispatcher.UIThread.Post(() =>
+            {
+                // 这里可以调用 ShowDialog 或更新 UI
+                _notificationManager.Show(m);
+            });
         });
     }
 
@@ -32,12 +36,12 @@ public partial class MainWindow : Window
     {
         await Task.Delay(1000);
         _notificationManager.Show(new Notification(
-                "标题",
-                "这是悬浮通知内容",
-                NotificationType.Success,
-                TimeSpan.FromSeconds(5),
-                onClick: null,
-                onClose: null
+            "标题",
+            "这是悬浮通知内容",
+            NotificationType.Success,
+            TimeSpan.FromSeconds(5),
+            onClick: null,
+            onClose: null
         ));
     }
 }

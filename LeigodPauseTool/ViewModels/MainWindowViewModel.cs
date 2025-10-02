@@ -25,6 +25,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private readonly ConfigService _configService;
     private readonly IApiService _leigodApiService;
+    private readonly INotificationService _notificationService;
     private AccountToken? _accountToken;
     public ObservableCollection<string> MonitoredProcesses { get; set; } = [];
 
@@ -34,6 +35,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         _configService = new ConfigService();
         _leigodApiService = new ApiService();
+        _notificationService = new NotificationService();
         _ = LoadConfigAsync();
     }
 
@@ -52,43 +54,34 @@ public partial class MainWindowViewModel : ViewModelBase
             var result = await loginWindow.ShowDialog<AccountToken?>(mainWindow);
             if (result is null)
             {
-                WeakReferenceMessenger.Default.Send(new Notification(
-                    "登录取消",
-                    "用户取消了登录操作",
-                    NotificationType.Warning,
-                    TimeSpan.FromSeconds(5),
-                    onClick: null,
-                    onClose: null)
-                );
+                _notificationService.ShowLoginCancelled();
             }
             else
             {
                 Console.WriteLine($"Result from second window: {result}"); // 输出结果
                 _accountToken = result;
                 _ = SaveConfigAsync();
-                WeakReferenceMessenger.Default.Send(new Notification(
-                    "登录成功",
-                    $"已获取账号令牌: {result}",
-                    NotificationType.Success,
-                    TimeSpan.FromSeconds(5),
-                    onClick: null,
-                    onClose: null)
-                );
+                _notificationService.ShowLoginSuccess(result.ToString());
             }
         }
     }
 
     [RelayCommand]
-    private void Monitor()
+    private async Task Monitor()
     {
+        if (!await IsAccountTokenValidAsync())
+        {
+            _notificationService.ShowLoginInvalid();
+            _accountToken = null;
+            return;
+        }
+
         if (MonitorButtonContent == "开始")
         {
-            MonitorButtonContent = "停止";
             StartTimer();
         }
         else
         {
-            MonitorButtonContent = "开始";
             StopTimer();
         }
     }
@@ -117,6 +110,28 @@ public partial class MainWindowViewModel : ViewModelBase
         // 在这里添加您的检测代码
         // 注意：这个方法在后台线程池线程上执行
         // 如果需要更新 UI，需要使用 Dispatcher
+        if (false)
+        {
+            return;
+        }
+
+        StopTimer();
+        if (_accountToken is null)
+        {
+            _notificationService.ShowLoginInvalid();
+            return;
+        }
+
+        var res = _leigodApiService.Pause(_accountToken.Token).Result;
+        Console.WriteLine(res);
+        if (res.Code != 0 && res.Code != 400803)
+        {
+            _notificationService.ShowLoginInvalid();
+            _accountToken = null;
+            return;
+        }
+
+        _notificationService.ShowPauseSuccess();
     }
 
 
@@ -131,43 +146,15 @@ public partial class MainWindowViewModel : ViewModelBase
 
         _accountToken = config.AccountToken;
 
-        if (_accountToken is not null)
+
+        if (await IsAccountTokenValidAsync())
         {
-            var pauseStatus = await _leigodApiService.Info(_accountToken.Token);
-            if (pauseStatus is PauseStatus.NoAuth)
-            {
-                WeakReferenceMessenger.Default.Send(new Notification(
-                    "登录失效",
-                    "请重新登录",
-                    NotificationType.Warning,
-                    TimeSpan.FromSeconds(5),
-                    onClick: null,
-                    onClose: null)
-                );
-                _accountToken = null;
-            }
-            else
-            {
-                WeakReferenceMessenger.Default.Send(new Notification(
-                    "登录有效",
-                    "当前登录有效",
-                    NotificationType.Success,
-                    TimeSpan.FromSeconds(5),
-                    onClick: null,
-                    onClose: null)
-                );
-            }
+            _notificationService.ShowLoginValid();
         }
         else
         {
-            WeakReferenceMessenger.Default.Send(new Notification(
-                "尚未登录",
-                "请登录账号",
-                NotificationType.Warning,
-                TimeSpan.FromSeconds(5),
-                onClick: null,
-                onClose: null)
-            );
+            _notificationService.ShowLoginInvalid();
+            _accountToken = null;
         }
 
         IntervalTime = config.IntervalTime;
@@ -185,6 +172,15 @@ public partial class MainWindowViewModel : ViewModelBase
         await _configService.SaveConfigAsync(config);
     }
 
+    private async Task<bool> IsAccountTokenValidAsync()
+    {
+        if (_accountToken is null)
+            return false;
+
+        var res = await _leigodApiService.Info(_accountToken.Token);
+        return res is not PauseStatus.NoAuth;
+    }
+
     partial void OnIntervalTimeChanged(int value)
     {
         _ = value;
@@ -196,7 +192,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         // 如果 timer 已存在，先停止
         StopTimer();
-
+        MonitorButtonContent = "停止";
         // 创建新的 timer，间隔时间为 intervalTime 秒
         _monitorTimer = new Timer(IntervalTime * 1000);
         _monitorTimer.Elapsed += OnTimerElapsed;
@@ -208,6 +204,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private void StopTimer()
     {
+        MonitorButtonContent = "开始";
         if (_monitorTimer != null)
         {
             _monitorTimer.Stop();
