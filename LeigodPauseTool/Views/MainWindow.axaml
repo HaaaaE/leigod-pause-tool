@@ -16,12 +16,20 @@
 
     <StackPanel Spacing="5">
         <Button Command="{Binding GetAccountTokenCommand}">获取登录令牌</Button>
-        <ui:NumberBox
-            Header="检测间隔(秒)"
-            Minimum="1"
-            Maximum="100000"
-            Value="{Binding IntervalTime}"
-            SpinButtonPlacementMode="Hidden" />
+        <StackPanel Orientation="Horizontal">
+            <ui:NumberBox
+                Header="检测间隔(秒)"
+                Minimum="1"
+                Maximum="100000"
+                Value="{Binding IntervalTime}"
+                SpinButtonPlacementMode="Hidden" />
+            <StackPanel Orientation="Horizontal" Spacing="10" IsVisible="{Binding IsMonitoring}">
+                <TextBlock Text="下次检测倒计时：" VerticalAlignment="Center" />
+                <TextBlock Text="{Binding CountdownSeconds}" VerticalAlignment="Center" FontWeight="Bold"
+                           Foreground="DarkOrange" />
+                <TextBlock Text="秒" VerticalAlignment="Center" FontSize="16" />
+            </StackPanel>
+        </StackPanel>
         <Button Content="{Binding MonitorButtonContent}"
                 Command="{Binding MonitorCommand}" />
         <StackPanel Orientation="Vertical">

@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using FluentAvalonia.UI.Controls;
 using LeigodPauseTool.Views;
 using LeigodPauseTool.Models;
 using LeigodPauseTool.Services;
@@ -22,6 +19,21 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private string _monitorButtonContent = "开始";
     [ObservableProperty] private int _intervalTime = 60;
     [ObservableProperty] private string _newMonitoredProcess = string.Empty;
+    [ObservableProperty] private bool _isMonitoring;
+    private int _countdownSeconds;
+
+    public int CountdownSeconds
+    {
+        get => _countdownSeconds;
+        set
+        {
+            Avalonia.Threading.Dispatcher.UIThread.Post(() =>
+            {
+                _countdownSeconds = value > 1 ? value : 1;
+                OnPropertyChanged(nameof(CountdownSeconds));
+            });
+        }
+    }
 
     private readonly ConfigService _configService;
     private readonly IApiService _leigodApiService;
@@ -87,6 +99,20 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private async Task CheckAccountTokenValidityAsync()
+    {
+        if (!await IsAccountTokenValidAsync())
+        {
+            _notificationService.ShowLoginInvalid();
+            _accountToken = null;
+        }
+        else
+        {
+            _notificationService.ShowLoginValid();
+        }
+    }
+
+    [RelayCommand]
     private void AddMonitoredProcess()
     {
         MonitoredProcesses.Add(NewMonitoredProcess);
@@ -104,16 +130,23 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private void OnTimerElapsed(object? sender, ElapsedEventArgs e)
     {
-        // 这里执行您需要的检测逻辑
-        Console.WriteLine($"Timer elapsed at: {e.SignalTime}");
+        // 倒计时递减
+        CountdownSeconds--;
 
-        // 在这里添加您的检测代码
-        // 注意：这个方法在后台线程池线程上执行
-        // 如果需要更新 UI，需要使用 Dispatcher
-        if (false)
+        // 如果倒计时未归零，继续等待
+        if (CountdownSeconds > 1)
         {
             return;
         }
+
+        // 倒计时归零，执行检测逻辑
+        Console.WriteLine($"Timer elapsed at: {e.SignalTime}");
+
+        // 重置倒计时
+        CountdownSeconds = IntervalTime;
+
+        // 检测被监控的进程是否运行
+        if (AnyMonitoredProcessRunning()) return;
 
         StopTimer();
         if (_accountToken is null)
@@ -181,6 +214,17 @@ public partial class MainWindowViewModel : ViewModelBase
         return res is not PauseStatus.NoAuth;
     }
 
+    private bool AnyMonitoredProcessRunning()
+    {
+        var runningProcessesWithWindows = Process.GetProcesses()
+            .Where(p => !string.IsNullOrEmpty(p.MainWindowTitle))
+            .Select(p => p.ProcessName)
+            .ToList();
+
+        return MonitoredProcesses.Any(monitoredProcess =>
+            runningProcessesWithWindows.Contains(monitoredProcess, StringComparer.OrdinalIgnoreCase));
+    }
+
     partial void OnIntervalTimeChanged(int value)
     {
         _ = value;
@@ -193,8 +237,13 @@ public partial class MainWindowViewModel : ViewModelBase
         // 如果 timer 已存在，先停止
         StopTimer();
         MonitorButtonContent = "停止";
-        // 创建新的 timer，间隔时间为 intervalTime 秒
-        _monitorTimer = new Timer(IntervalTime * 1000);
+        IsMonitoring = true;
+
+        // 初始化倒计时
+        CountdownSeconds = IntervalTime;
+
+        // 创建 timer，每秒触发一次
+        _monitorTimer = new Timer(1000);
         _monitorTimer.Elapsed += OnTimerElapsed;
         _monitorTimer.AutoReset = true; // 自动重复
         _monitorTimer.Start();
@@ -205,6 +254,9 @@ public partial class MainWindowViewModel : ViewModelBase
     private void StopTimer()
     {
         MonitorButtonContent = "开始";
+        IsMonitoring = false;
+        CountdownSeconds = 0;
+
         if (_monitorTimer != null)
         {
             _monitorTimer.Stop();
