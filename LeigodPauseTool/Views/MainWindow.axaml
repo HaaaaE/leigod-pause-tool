@@ -9,49 +9,102 @@
         mc:Ignorable="d"
         x:Class="LeigodPauseTool.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Width="600"
-        Height="400"
+        Width="400"
+        Height="600"
         Icon="/Assets/avalonia-logo.ico"
         Title="LeigodPauseTool">
 
-    <StackPanel Spacing="5">
-        <StackPanel Orientation="Horizontal">
-            <Button Command="{Binding GetAccountTokenCommand}">获取登录令牌</Button>
-            <Button Command="{Binding CheckAccountTokenValidityCommand}">检查登录状况</Button>
-        </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <ui:NumberBox
-                Header="检测间隔(秒)"
-                Minimum="1"
-                Maximum="100000"
-                Value="{Binding IntervalTime}"
-                SpinButtonPlacementMode="Hidden" />
-            <StackPanel Orientation="Horizontal" Spacing="10" IsVisible="{Binding IsMonitoring}">
-                <TextBlock Text="下次检测倒计时：" VerticalAlignment="Center" />
-                <TextBlock Text="{Binding CountdownSeconds}" VerticalAlignment="Center" FontWeight="Bold"
-                           Foreground="DarkOrange" />
-                <TextBlock Text="秒" VerticalAlignment="Center" FontSize="16" />
+    <StackPanel Spacing="15" Margin="20">
+        <!-- 账号管理区域 -->
+        <Border BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="15"
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}">
+            <StackPanel Spacing="10">
+                <TextBlock Text="账号管理" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,5" />
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <Button Command="{Binding GetAccountTokenCommand}" MinWidth="120">获取登录令牌</Button>
+                    <Button Command="{Binding CheckAccountTokenValidityCommand}" MinWidth="120">检查登录状况</Button>
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
-        <Button Content="{Binding MonitorButtonContent}"
-                Command="{Binding MonitorCommand}" />
-        <StackPanel Orientation="Vertical">
-            <TextBox Text="{Binding NewMonitoredProcess}"></TextBox>
-            <Button Command="{Binding AddMonitoredProcessCommand}">添加进程名称</Button>
-        </StackPanel>
-        <ListBox ItemsSource="{Binding MonitoredProcesses}" Height="150">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Spacing="10">
-                        <TextBlock Text="{Binding}" />
-                        <Button Content="删除"
-                                x:CompileBindings="False"
-                                Command="{Binding DataContext.RemoveMonitoredProcessCommand,
-                                                  RelativeSource={RelativeSource AncestorType=Window}}"
-                                CommandParameter="{Binding}" />
+        </Border>
+
+        <!-- 监控设置区域 -->
+        <Border BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="15"
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}">
+            <StackPanel Spacing="12">
+                <TextBlock Text="监控设置" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,5" />
+
+                <StackPanel Orientation="Horizontal" Spacing="15">
+                    <ui:NumberBox
+                        Header="检测间隔(秒)"
+                        Minimum="1"
+                        Maximum="100000"
+                        Value="{Binding IntervalTime}"
+                        SpinButtonPlacementMode="Inline"
+                        MinWidth="150" />
+                    <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Bottom" Margin="0,0,0,5">
+                        <TextBlock Text="下次检测倒计时：" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <TextBlock Text="{Binding CountdownSeconds}" VerticalAlignment="Center" FontWeight="Bold"
+                                   Foreground="{DynamicResource SystemAccentColor}" FontSize="18" />
+                        <TextBlock Text="秒" VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
                     </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+                </StackPanel>
+
+                <Button Content="{Binding MonitorButtonContent}"
+                        Command="{Binding MonitorCommand}"
+                        HorizontalAlignment="Stretch"
+                        Height="36" />
+            </StackPanel>
+        </Border>
+
+        <!-- 进程管理区域 -->
+        <Border BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="15"
+                Background="{DynamicResource CardBackgroundFillColorDefaultBrush}">
+            <StackPanel Spacing="10">
+                <TextBlock Text="监控进程列表" FontSize="14" FontWeight="SemiBold" Margin="0,0,0,5" />
+
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBox Text="{Binding NewMonitoredProcess}"
+                             Watermark="输入进程名称（例如：dota2）"
+                             Grid.Column="0" />
+                    <Button Command="{Binding AddMonitoredProcessCommand}"
+                            Grid.Column="1"
+                            MinWidth="100"
+                            Margin="10, 0, 0, 0">
+                        添加进程
+                    </Button>
+                </Grid>
+
+                <ListBox ItemsSource="{Binding MonitoredProcesses}"
+                         Height="150">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="*,Auto" Margin="5">
+                                <TextBlock Text="{Binding}"
+                                           VerticalAlignment="Center"
+                                           Grid.Column="0" />
+                                <Button Content="删除"
+                                        Grid.Column="1"
+                                        x:CompileBindings="False"
+                                        Command="{Binding DataContext.RemoveMonitoredProcessCommand,
+                                                          RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding}"
+                                        MinWidth="70" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+        </Border>
     </StackPanel>
 </Window>

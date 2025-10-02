@@ -3,11 +3,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:wv="clr-namespace:WebViewControl;assembly=WebViewControl.Avalonia"
+        xmlns:ui="using:FluentAvalonia.UI.Controls"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="LeigodPauseTool.Views.LoginWindow"
         Title="LoginWindow"
         Focusable="True">
-    <Grid>
+    <DockPanel>
+        <ui:InfoBar DockPanel.Dock="Top"
+                    Title="登录账号"
+                    Message="等待网页加载完成后，点击网页右上角头像图标登录你的雷神加速器账号"
+                    IsOpen="True"
+                    Severity="Informational" />
         <wv:WebView x:Name="Browser" Address="https://www.leigod.com/" />
-    </Grid>
+    </DockPanel>
+
 </Window>

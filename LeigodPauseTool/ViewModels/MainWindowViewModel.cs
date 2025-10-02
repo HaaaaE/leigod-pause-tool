@@ -29,7 +29,12 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             Avalonia.Threading.Dispatcher.UIThread.Post(() =>
             {
-                _countdownSeconds = value > 1 ? value : 1;
+                _countdownSeconds = value switch
+                {
+                    > 1 => value,
+                    -1 => 0,
+                    _ => 1
+                };
                 OnPropertyChanged(nameof(CountdownSeconds));
             });
         }
@@ -255,7 +260,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         MonitorButtonContent = "开始";
         IsMonitoring = false;
-        CountdownSeconds = 0;
+        CountdownSeconds = -1;
 
         if (_monitorTimer != null)
         {

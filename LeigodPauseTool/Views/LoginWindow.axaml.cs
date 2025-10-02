@@ -7,6 +7,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using System.Text.Json;
 using System.Web;
+using Avalonia.Controls.Notifications;
 using LeigodPauseTool.Models;
 using Xilium.CefGlue;
 
