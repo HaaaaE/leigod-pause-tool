@@ -151,7 +151,7 @@ public partial class MainWindowViewModel : ViewModelBase
         StopTimer();
         if (_accountToken is null)
         {
-            _notificationService.ShowLoginInvalid();
+            _notificationService.ShowLoginInvalidWithSystemToast();
             return;
         }
 
@@ -159,7 +159,7 @@ public partial class MainWindowViewModel : ViewModelBase
         Console.WriteLine(res);
         if (res.Code != 0 && res.Code != 400803)
         {
-            _notificationService.ShowLoginInvalid();
+            _notificationService.ShowLoginInvalidWithSystemToast();
             _accountToken = null;
             return;
         }

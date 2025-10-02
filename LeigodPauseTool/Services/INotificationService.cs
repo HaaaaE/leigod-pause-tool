@@ -6,5 +6,6 @@ public interface INotificationService
     void ShowLoginCancelled();
     void ShowLoginValid();
     void ShowLoginInvalid();
+    void ShowLoginInvalidWithSystemToast();
     void ShowPauseSuccess();
 }

@@ -1,6 +1,7 @@
 using System;
 using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Toolkit.Uwp.Notifications;
 
 namespace LeigodPauseTool.Services;
 
@@ -26,9 +27,24 @@ public class NotificationService : INotificationService
         SendNotification("未登录/登录失效", "请登录或重新登录", NotificationType.Warning);
     }
 
+    public void ShowLoginInvalidWithSystemToast()
+    {
+        SendNotification("未登录/登录失效", "请登录或重新登录", NotificationType.Warning);
+        new ToastContentBuilder()
+            .AddArgument("action", "info")
+            .AddText("未登录/登录失效")
+            .AddText("请登录或重新登录")
+            .Show(); // 仅在 Windows TFM 下可解析
+    }
+
     public void ShowPauseSuccess()
     {
         SendNotification("暂停成功", "暂停成功", NotificationType.Success);
+        new ToastContentBuilder()
+            .AddArgument("action", "info")
+            .AddText("暂停成功")
+            .AddText("暂停成功")
+            .Show(); // 仅在 Windows TFM 下可解析
     }
 
     private static void SendNotification(string title, string message, NotificationType type)
