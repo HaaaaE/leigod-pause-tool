@@ -95,10 +95,10 @@
                                            Grid.Column="0" />
                                 <Button Content="删除"
                                         Grid.Column="1"
-                                        x:CompileBindings="False"
-                                        Command="{Binding DataContext.RemoveMonitoredProcessCommand,
-                                                          RelativeSource={RelativeSource AncestorType=Window}}"
-                                        CommandParameter="{Binding}"
+                                        DataContext="{Binding $parent[Window].DataContext}"
+                                        x:DataType="vm:MainWindowViewModel"
+                                        Command="{Binding RemoveMonitoredProcessCommand}"
+                                        CommandParameter="{Binding $parent[ListBoxItem].DataContext}"
                                         MinWidth="70" />
                             </Grid>
                         </DataTemplate>

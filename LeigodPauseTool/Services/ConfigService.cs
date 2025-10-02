@@ -19,10 +19,10 @@ public class ConfigService
     public ConfigService()
     {
         var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        appDataPath = "";
         var appFolder = Path.Combine(appDataPath, "LeigodPauseTool");
         Directory.CreateDirectory(appFolder);
         _configFilePath = Path.Combine(appFolder, "config.json");
+        _configFilePath = "config.json";
     }
 
     public async Task<Config> LoadConfigAsync()
@@ -31,6 +31,7 @@ public class ConfigService
         {
             if (!File.Exists(_configFilePath))
             {
+                _ = SaveConfigAsync(new Config());
                 return new Config();
             }
 
