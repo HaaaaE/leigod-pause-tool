@@ -6,24 +6,41 @@
         xmlns:sty="using:FluentAvalonia.Styling"
         xmlns:ui="using:FluentAvalonia.UI.Controls"
         xmlns:uip="using:FluentAvalonia.UI.Controls.Primitives"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d"
         x:Class="LeigodPauseTool.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Width="400"
-        Height="250"
+        Width="600"
+        Height="400"
         Icon="/Assets/avalonia-logo.ico"
         Title="LeigodPauseTool">
 
-
-    <StackPanel>
-        <Button Command="{Binding GetTokenButtonClickCommand}">123</Button>
-        <ui:NumberBox 
+    <StackPanel Spacing="5">
+        <Button Command="{Binding GetAccountTokenCommand}">获取登录令牌</Button>
+        <ui:NumberBox
             Header="检测间隔(秒)"
-            Minimum="0"
+            Minimum="1"
             Maximum="100000"
-            Value="0"
-            SpinButtonPlacementMode="Hidden"/>    
-        <Button Content="{Binding DetectButtonContent}" 
-                Command="{Binding DetectButtonClickCommand}"/>
+            Value="{Binding IntervalTime}"
+            SpinButtonPlacementMode="Hidden" />
+        <Button Content="{Binding MonitorButtonContent}"
+                Command="{Binding MonitorCommand}" />
+        <StackPanel Orientation="Vertical">
+            <TextBox Text="{Binding NewMonitoredProcess}"></TextBox>
+            <Button Command="{Binding AddMonitoredProcessCommand}">添加进程名称</Button>
+        </StackPanel>
+        <ListBox ItemsSource="{Binding MonitoredProcesses}" Height="150">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Text="{Binding}" />
+                        <Button Content="删除"
+                                x:CompileBindings="False"
+                                Command="{Binding DataContext.RemoveMonitoredProcessCommand,
+                                                  RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </StackPanel>
 </Window>

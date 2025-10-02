@@ -21,21 +21,20 @@ public class UnitTest1(ITestOutputHelper testOutputHelper)
         result = await service.Info(token);
         testOutputHelper.WriteLine(result.ToString());
     }
+
     [Fact]
     public void TestMethod1()
-    {        // 使用 AppleScript 通过 osascript 获取前台有窗口的应用
-        Process p = new Process();
-        p.StartInfo.FileName = "osascript";
-        p.StartInfo.Arguments = "-e \"tell application \\\"System Events\\\" to get name of every process whose background only is false\"";
-        p.StartInfo.RedirectStandardOutput = true;
-        p.StartInfo.UseShellExecute = false;
-        p.StartInfo.CreateNoWindow = true;
-        p.Start();
+    {
+        // Get all processes that have a main window
+        var processesWithWindows = Process.GetProcesses()
+            .Where(p => !string.IsNullOrEmpty(p.MainWindowTitle))
+            .Select(p => p.ProcessName)
+            .ToList();
 
-        string output = p.StandardOutput.ReadToEnd();
-        p.WaitForExit();
-
-        testOutputHelper.WriteLine("正在运行的应用程序（macOS）：");
-        testOutputHelper.WriteLine(output);
+        testOutputHelper.WriteLine($"Found {processesWithWindows.Count} processes with windows:\n");
+        foreach (var process in processesWithWindows)
+        {
+            testOutputHelper.WriteLine($"{process}");
+        }
     }
 }
