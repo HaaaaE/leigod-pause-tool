@@ -1,0 +1,13 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wv="clr-namespace:WebViewControl;assembly=WebViewControl.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="LeigodPauseTool.Views.LoginWindow"
+        Title="LoginWindow"
+        Focusable="True">
+    <Grid>
+        <wv:WebView x:Name="Browser" Address="https://www.leigod.com/" />
+    </Grid>
+</Window>
