@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="LeigodPauseTool/App.axaml" value="LeigodPauseTool/LeigodPauseTool.csproj" />
+        <entry key="LeigodPauseTool/Views/LoginWindow.axaml" value="LeigodPauseTool/LeigodPauseTool.csproj" />
+        <entry key="LeigodPauseTool/Views/MainWindow.axaml" value="LeigodPauseTool/LeigodPauseTool.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

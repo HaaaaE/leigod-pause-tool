@@ -1,0 +1,29 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:LeigodPauseTool.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sty="using:FluentAvalonia.Styling"
+        xmlns:ui="using:FluentAvalonia.UI.Controls"
+        xmlns:uip="using:FluentAvalonia.UI.Controls.Primitives"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="LeigodPauseTool.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Width="400"
+        Height="250"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="LeigodPauseTool">
+
+
+    <StackPanel>
+        <Button Command="{Binding GetTokenButtonClickCommand}">123</Button>
+        <ui:NumberBox 
+            Header="检测间隔(秒)"
+            Minimum="0"
+            Maximum="100000"
+            Value="0"
+            SpinButtonPlacementMode="Hidden"/>    
+        <Button Content="{Binding DetectButtonContent}" 
+                Command="{Binding DetectButtonClickCommand}"/>
+    </StackPanel>
+</Window>

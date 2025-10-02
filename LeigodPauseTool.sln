@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeigodPauseTool", "LeigodPauseTool\LeigodPauseTool.csproj", "{55BBCFAD-3913-49A5-962A-E27B4DA644FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeigodPauseTool.Tests", "LeigodPauseTool.Tests\LeigodPauseTool.Tests.csproj", "{6EAE54D3-78EC-4741-BC8B-45F10C6B695C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{55BBCFAD-3913-49A5-962A-E27B4DA644FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55BBCFAD-3913-49A5-962A-E27B4DA644FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55BBCFAD-3913-49A5-962A-E27B4DA644FA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{55BBCFAD-3913-49A5-962A-E27B4DA644FA}.Debug|x64.Build.0 = Debug|Any CPU
+		{55BBCFAD-3913-49A5-962A-E27B4DA644FA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{55BBCFAD-3913-49A5-962A-E27B4DA644FA}.Debug|x86.Build.0 = Debug|Any CPU
+		{55BBCFAD-3913-49A5-962A-E27B4DA644FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55BBCFAD-3913-49A5-962A-E27B4DA644FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55BBCFAD-3913-49A5-962A-E27B4DA644FA}.Release|x64.ActiveCfg = Release|Any CPU
+		{55BBCFAD-3913-49A5-962A-E27B4DA644FA}.Release|x64.Build.0 = Release|Any CPU
+		{55BBCFAD-3913-49A5-962A-E27B4DA644FA}.Release|x86.ActiveCfg = Release|Any CPU
+		{55BBCFAD-3913-49A5-962A-E27B4DA644FA}.Release|x86.Build.0 = Release|Any CPU
+		{6EAE54D3-78EC-4741-BC8B-45F10C6B695C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EAE54D3-78EC-4741-BC8B-45F10C6B695C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EAE54D3-78EC-4741-BC8B-45F10C6B695C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6EAE54D3-78EC-4741-BC8B-45F10C6B695C}.Debug|x64.Build.0 = Debug|Any CPU
+		{6EAE54D3-78EC-4741-BC8B-45F10C6B695C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6EAE54D3-78EC-4741-BC8B-45F10C6B695C}.Debug|x86.Build.0 = Debug|Any CPU
+		{6EAE54D3-78EC-4741-BC8B-45F10C6B695C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EAE54D3-78EC-4741-BC8B-45F10C6B695C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EAE54D3-78EC-4741-BC8B-45F10C6B695C}.Release|x64.ActiveCfg = Release|Any CPU
+		{6EAE54D3-78EC-4741-BC8B-45F10C6B695C}.Release|x64.Build.0 = Release|Any CPU
+		{6EAE54D3-78EC-4741-BC8B-45F10C6B695C}.Release|x86.ActiveCfg = Release|Any CPU
+		{6EAE54D3-78EC-4741-BC8B-45F10C6B695C}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
